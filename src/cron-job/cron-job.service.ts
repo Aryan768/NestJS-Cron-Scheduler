@@ -34,4 +34,16 @@ export class CronJobService {
     }
     return deletedCronJob;
   }
+  // Log a cron job trigger
+  async logTrigger(id: string, response: any): Promise<CronJob> {
+  const loggedTrigger = await this.cronJobModel.findByIdAndUpdate(
+    id,
+    { $push: { history: { response } } },
+    { new: true },
+  );
+    if (!loggedTrigger) {
+      throw new NotFoundException(`Logged Trigger with ID ${id} not found`);
+    }
+    return  loggedTrigger;
+  }
 }
